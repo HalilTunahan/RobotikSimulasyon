@@ -1,0 +1,21 @@
+<launch>
+	<include file="$(find robotik_simulasyon)/launch/ilk_robot_xacro.launch"/>
+
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="paused" default="false" />
+		<arg name="use_sim_time" default="true" />
+		<arg name="gui" default="true" />
+		<arg name="headless" default="false" />
+		<arg name="debug" default="false" />
+	</include>
+	
+	<group ns="robot_kolu">	
+		<param name="robot_description" command="$(find xacro)xacro $(find robotik_simulasyon)/urdf/ilk_robot_xacro.xml"/>
+		<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-param robot_description -urdf -model robot_kolu" />
+		<node name="control_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="--namespace=/robot_kolu joint_state_controller joint_motor_controller" />
+		<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+			<param name="publish_frequency" type="double" value="5.0" />
+		</node>
+	</group>
+		
+</launch>

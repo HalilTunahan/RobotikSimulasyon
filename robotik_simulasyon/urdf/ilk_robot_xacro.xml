@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<robot name="robot_kolu"
+xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+
+<xacro:property name="base_link_length" value="0.05"/>
+<xacro:property name="base_link_radius" value="0.15"/>
+
+<xacro:property name="govde_uzvu_x" value="0.2"/>
+<xacro:property name="govde_uzvu_y" value="0.2"/>
+<xacro:property name="govde_uzvu_z" value="0.7"/>
+
+<xacro:property name="kol_sol_x" value="0.04"/>
+<xacro:property name="kol_sol_y" value="0.04"/>
+<xacro:property name="kol_sol_z" value="0.3"/>
+
+<xacro:property name="kol_sag_x" value="0.04"/>
+<xacro:property name="kol_sag_y" value="0.04"/>
+<xacro:property name="kol_sag_z" value="0.3"/>
+
+<xacro:property name="kafa_radius" value="0.1"/>
+
+<xacro:macro name="atalet_matrisi" params="kutle">
+
+    <inertial>
+        <mass value="${kutle}"/>
+       <inertia ixx="0.5" ixy="0.0" ixz="0.0" iyy="0.5" iyz="0.0" izz="0.5"/>
+    </inertial>
+
+</xacro:macro>
+
+
+ 
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <cylinder radius="${base_link_radius}" length="${base_link_length}"/>
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <material name="yesil">
+                <color rgba="0 1 0 1">
+
+                </color>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${base_link_radius}" length="${base_link_length}"/>
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            
+        </collision>
+      <xacro:atalet_matrisi kutle="10.0"/>
+    </link>
+
+    <joint name="govde_eklemi" type="revolute">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <axis xyz="0 0 1 "/>
+        
+        <parent link="base_link"/>
+        <child link="govde_uzvu"/>
+        <calibration rising="0.0"/>
+        <dynamics damping="0.0" friction="0.0"/>
+        <limit lower="-1.57" upper="1.57" effort="30" velocity="1.0"/>
+        <safety_controller k_position="100" k_velocity="1.5" soft_lower_limit="-2.857" soft_upper_limit="2.857"/>
+        
+    </joint>
+    <link name="govde_uzvu">
+        <visual>
+            <geometry>
+                <box size="${govde_uzvu_x} ${govde_uzvu_y} ${govde_uzvu_z}"/>
+            </geometry>
+            <origin xyz="0.0 0.0 0.35" rpy="0.0 0.0 0.0"/>
+            <material name="kirmizi">
+                <color rgba="1 0 0 1">
+                </color>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${govde_uzvu_x} ${govde_uzvu_y} ${govde_uzvu_z}"/>
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            
+        </collision>
+        <xacro:atalet_matrisi kutle="1.0"/>
+    </link>
+
+   
+    <joint name="kol_eklemi_sol" type="revolute">
+        <origin xyz="0.05 0.0 0.5" rpy="0.0 0.0 0.0"/>
+        <axis xyz="1 0 0 "/>
+        
+        <parent link="govde_uzvu"/>
+        <child link="kol_sol"/>
+        <calibration rising="0.0"/>
+        <dynamics damping="0.0" friction="0.0"/>
+        <limit lower="0.0" upper="3.14" effort="30" velocity="1.0"/>
+        <safety_controller k_position="100" k_velocity="1.5" soft_lower_limit="-2.857" soft_upper_limit="2.857"/>
+        
+    </joint>
+    <link name="kol_sol">
+        <visual>
+            <geometry>
+                <box size="${kol_sol_x} ${kol_sol_y} ${kol_sol_z}"/>
+            </geometry>
+            <origin xyz="0.07 0.0 0.15" rpy="0.0 0.0 0.0"/>
+            <material name="sari">
+                <color rgba="0 1 1 1">
+                </color>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${kol_sol_x} ${kol_sol_y} ${kol_sol_z}"/>
+            </geometry>
+            <origin xyz="0.025 0.0 0.15" rpy="0.0 0.0 0.0"/>
+            
+        </collision>
+        <xacro:atalet_matrisi kutle="1"/>
+    </link>
+    <joint name="kol_eklemi_sag" type="revolute">
+        <origin xyz="-0.05 0.0 0.5" rpy="0.0 0.0 0.0"/>
+        <axis xyz="1 0 0 "/>
+        
+        <parent link="govde_uzvu"/>
+        <child link="kol_sag"/>
+        <calibration rising="0.0"/>
+        <dynamics damping="0.0" friction="0.0"/>
+        <limit lower="0.0" upper="3.14" effort="30" velocity="1.0"/>
+        <safety_controller k_position="100" k_velocity="1.5" soft_lower_limit="-2.857" soft_upper_limit="2.857"/>
+        
+    </joint>
+    <link name="kol_sag">
+        <visual>
+            <geometry>
+                <box size="${kol_sag_x} ${kol_sag_y} ${kol_sag_z}"/>
+            </geometry>
+            <origin xyz="-0.07 0.0 0.15" rpy="0.0 0.0 0.0"/>
+            <material name="sari">
+                <color rgba="1 0 0 1">
+                </color>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${kol_sag_x} ${kol_sag_y} ${kol_sag_z}"/>
+            </geometry>
+            <origin xyz="0.025 0.0 0.15" rpy="0.0 0.0 0.0"/>
+            
+        </collision>
+        <xacro:atalet_matrisi kutle="1"/>
+    </link>
+    <joint name="kafa_eklemi" type="revolute">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <axis xyz="0 0 1 "/>
+        
+        <parent link="govde_uzvu"/>
+        <child link="kafa"/>
+        <calibration rising="0.0"/>
+        <dynamics damping="0.0" friction="0.0"/>
+        <limit lower="-1.57" upper="1.57" effort="30" velocity="1.0"/>
+        <safety_controller k_position="100" k_velocity="1.5" soft_lower_limit="-2.857" soft_upper_limit="2.857"/>
+        
+    </joint>
+    <link name="kafa">
+        <visual>
+            <geometry>
+                <sphere radius="${kafa_radius}"/>
+            </geometry>
+            <origin xyz="0.0 0.0 0.8" rpy="0.0 0.0 0.0"/>
+            <material name="karisik">
+                <color rgba="1 0 1 1">
+                </color>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="${kafa_radius}"/>
+            </geometry>
+            <origin xyz="0.025 0.0 0.15" rpy="0.0 0.0 0.0"/>
+            
+        </collision>
+        <xacro:atalet_matrisi kutle="1"/>
+    </link>
+    <link name="camera">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="1.5 1.5 0.5"/>
+            </geometry>
+        </collision>
+  
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.08 0.02 0.08"/>
+            </geometry>
+        </visual>
+    
+        <inertial>
+          <mass value="1e-5" />
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <inertia ixx="0.2" ixy="0" ixz="0" iyy="0.2" iyz="0" izz="0.2" />
+        </inertial>
+        
+      </link>
+  
+    <joint name="sensor_joint" type="fixed">
+          <parent link="kafa"/>
+          <child link="camera"/>
+          <origin rpy="0 0 0" xyz="0 -0.09 0.8"/>
+
+    </joint>
+
+    <gazebo reference="base_link">
+		<material>Gazebo/Orange</material>
+	</gazebo>
+    <gazebo reference="govde_uzvu">
+		<material>Gazebo/Green</material>
+	  </gazebo>
+    <gazebo reference="kol_sol">
+		<material>Gazebo/Black</material>
+	  </gazebo>
+    <gazebo reference="kol_sag">
+		<material>Gazebo/Black</material>
+	  </gazebo>
+    <gazebo reference="kafa">
+		<material>Gazebo/Red</material>
+	</gazebo>
+
+    <gazebo reference="camera">
+		<material>Gazebo/Red</material>
+	</gazebo>
+
+    <xacro:include filename="$(find robotik_simulasyon)/urdf/cam.gazebo"/>
+
+    
+    
+
+</robot>
